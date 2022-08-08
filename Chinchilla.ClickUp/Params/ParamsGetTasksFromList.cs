@@ -21,6 +21,9 @@ namespace Chinchilla.ClickUp.Params
 		public int Page { get; set; } = 0;
 
         public bool IncludeClosed { get; set; } = false;
+
+        public bool IncludeSubTasks { get; set; } = false;
+
 		#endregion
 
 

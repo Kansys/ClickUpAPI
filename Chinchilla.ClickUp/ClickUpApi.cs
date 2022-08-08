@@ -369,6 +369,8 @@ namespace Chinchilla.ClickUp
                 additionalParams.Add($"page={paramsGetTasks.Page}");
 			if(paramsGetTasks.IncludeClosed)
                 additionalParams.Add("include_closed=true");
+			if(paramsGetTasks.IncludeSubTasks)
+                additionalParams.Add("subtasks=true");
 
 			if (additionalParams.Count > 0)
                 resource += "?" + string.Join("&", additionalParams);
