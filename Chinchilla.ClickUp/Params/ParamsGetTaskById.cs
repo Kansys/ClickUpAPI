@@ -21,18 +21,26 @@ namespace Chinchilla.ClickUp.Params
 
 		#endregion
 
+        public string CustomTaskId { get; } = string.Empty;
+        public string TeamId { get; }
+
 
 		#region Constructor
 
 		/// <summary>
 		/// The constructor of ParamsGetTasksById
 		/// </summary>
-		/// <param name="teamId"></param>
+		/// <param name="taskId"></param>
 		public ParamsGetTaskById(string taskId)
 		{
 			TaskId = taskId;
 		}
 
+        public ParamsGetTaskById(string customTaskId, string teamId)
+        {
+            CustomTaskId = customTaskId;
+			TeamId = teamId;
+        }
 		#endregion
 
 
@@ -45,7 +53,7 @@ namespace Chinchilla.ClickUp.Params
 		{
 			if (string.IsNullOrEmpty(TaskId))
 			{
-				throw new ArgumentNullException("TaskId");
+				throw new ArgumentNullException(nameof(TaskId));
 			}
 		}
 

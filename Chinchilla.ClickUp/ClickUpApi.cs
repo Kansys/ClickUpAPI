@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Chinchilla.ClickUp.Helpers;
 using Chinchilla.ClickUp.Params;
@@ -135,7 +136,7 @@ namespace Chinchilla.ClickUp
 		/// <summary>
 		/// Get a team's details. This team must be one of the authorized teams for this token.
 		/// </summary>
-		/// <param name="paramsGetTeamByID">param object of get team by ID request</param>
+		/// <param name="paramsGetTeamById">param object of get team by ID request</param>
 		/// <returns>ResponseGeneric with ResponseTeam response object</returns>
 		public ResponseGeneric<ResponseTeam, ResponseError> GetTeamById(ParamsGetTeamById paramsGetTeamById)
 		{
@@ -207,7 +208,7 @@ namespace Chinchilla.ClickUp
 		/// <summary>
 		/// Create a folder
 		/// </summary>
-		/// <param name="paramsCreateList">param object of create folder request</param>
+		/// <param name="paramsCreateFolder">param object of create folder request</param>
 		/// <param name="requestData">RequestCreateFolder object</param>
 		/// <returns>ResponseGeneric with ModelFolder object expected</returns>
 		public ResponseGeneric<ResponseModelFolder, ResponseError> CreateFolder(ParamsCreateFolder paramsCreateFolder, RequestCreateFolder requestData)
@@ -326,7 +327,10 @@ namespace Chinchilla.ClickUp
 		public ResponseGeneric<ResponseModelTask, ResponseError> GetTaskById(ParamsGetTaskById paramsGetTaskById)
 		{
 			var client = new RestClient(_baseAddress);
-			var request = new RestRequest($"task/{paramsGetTaskById.TaskId}", Method.GET);
+            var resource = string.IsNullOrEmpty(paramsGetTaskById.CustomTaskId) ? 
+                $"task/{paramsGetTaskById.TaskId}" :
+                $"task/{paramsGetTaskById.CustomTaskId}/?custom_task_ids=true&team_id={paramsGetTaskById.TeamId}";
+            var request = new RestRequest(resource, Method.GET);
 			request.AddHeader("authorization", AccessToken);
 
 			// execute the request
@@ -337,8 +341,7 @@ namespace Chinchilla.ClickUp
 		/// <summary>
 		/// Get Tasks of the Team and filter its by optionalParams
 		/// </summary>
-		/// <param name="paramsGetTasks">params obkect of get tasks request</param>
-		/// <param name="optionalParams">OptionalParamsGetTask object</param>
+		/// <param name="paramsGetTasks">params object of get tasks request</param>
 		/// <returns>ResponseGeneric with ResponseTasks response object</returns>
 		public ResponseGeneric<ResponseTasks, ResponseError> GetTasks(ParamsGetTasks paramsGetTasks)
 		{
@@ -351,10 +354,37 @@ namespace Chinchilla.ClickUp
 			return result;
 		}
 
+        /// <summary>
+        /// Get Tasks of the Team and filter its by optionalParams
+        /// </summary>
+        /// <param name="paramsGetTasks">params object of get tasks request</param>
+        /// <returns>ResponseGeneric with ResponseTasks response object</returns>
+        public ResponseGeneric<ResponseTasks, ResponseError> GetTasks(ParamsGetTasksFromList paramsGetTasks)
+        {
+            var client = new RestClient(_baseAddress);
+            var resource = $"list/{paramsGetTasks.ListId}/task";
+
+            var additionalParams = new List<string>();
+            if (paramsGetTasks.Page > 0)
+                additionalParams.Add($"page={paramsGetTasks.Page}");
+			if(paramsGetTasks.IncludeClosed)
+                additionalParams.Add("include_closed=true");
+
+			if (additionalParams.Count > 0)
+                resource += "?" + string.Join("&", additionalParams);
+
+            var request = new RestRequest(resource, Method.GET);
+            request.AddHeader("authorization", AccessToken);
+
+            // execute the request
+            ResponseGeneric<ResponseTasks, ResponseError> result = RestSharperHelper.ExecuteRequest<ResponseTasks, ResponseError>(client, request);
+            return result;
+        }
+
 		/// <summary>
 		/// Create Task in List.
 		/// </summary>
-		/// <param name="paramCreateTaskInList">params object of create task in list request</param>
+		/// <param name="paramsCreateTaskInList">params object of create task in list request</param>
 		/// <param name="requestData">RequestCreateTaskInList object</param>
 		/// <returns>ResponseGeneric with ModelTask object Expected</returns>
 		public ResponseGeneric<ResponseModelTask, ResponseError> CreateTaskInList(ParamsCreateTaskInList paramsCreateTaskInList, RequestCreateTaskInList requestData)
@@ -388,6 +418,56 @@ namespace Chinchilla.ClickUp
 			ResponseGeneric<ResponseModelTask, ResponseError> result = RestSharperHelper.ExecuteRequest<ResponseModelTask, ResponseError>(client, request);
 			return result;
 		}
+
+        /// <summary>
+        /// Edit Task informations.
+        /// </summary>
+        /// <param name="paramsEditTask">param object of Edit Task request</param>
+        /// <param name="requestData">RequestEditTask object</param>
+        /// <returns>ResponseGeneric with ResponseSuccess response object</returns>
+        public ResponseGeneric<ResponseModelTask, ResponseError> EditTask2(ParamsEditTask paramsEditTask, object requestData)
+        {
+            var client = new RestClient(_baseAddress);
+            var request = new RestRequest($"task/{paramsEditTask.TaskId}", Method.PUT);
+            request.AddHeader("authorization", AccessToken);
+            request.AddJsonBody(requestData);
+
+            // execute the request
+            var result = RestSharperHelper.ExecuteRequest<ResponseModelTask, ResponseError>(client, request);
+            return result;
+        }
+
+
+		/// <summary>
+		/// Edit Task custom field.
+		/// </summary>
+		/// <param name="paramsEditTaskCustomField">param object of Edit Task request</param>
+		/// <param name="value">custom field value as object</param>
+		/// <returns>ResponseGeneric with ResponseSuccess response object</returns>
+		public ResponseGeneric<ResponseSuccess, ResponseError> EditTaskCustomField(ParamsEditTaskCustomField paramsEditTaskCustomField, object value)
+        {
+            var client = new RestClient(_baseAddress);
+            var request = new RestRequest($"task/{paramsEditTaskCustomField.TaskId}/field/{paramsEditTaskCustomField.FieldId}/", Method.POST);
+            request.AddHeader("authorization", AccessToken);
+            request.AddJsonBody(new{ value});
+
+            // execute the request
+            var result = RestSharperHelper.ExecuteRequest<ResponseSuccess, ResponseError>(client, request);
+            return result;
+        }
+
+        public ResponseGeneric<ResponseModelAccessibleCustomFields, ResponseError> GetAccessibleCustomFields(ParamsGetListById paramsGetListById)
+        {
+            var client = new RestClient(_baseAddress);
+            var request = new RestRequest($"list/{paramsGetListById.ListId}/field", Method.GET);
+            request.AddHeader("authorization", AccessToken);
+
+            // execute the request
+            var result = RestSharperHelper.ExecuteRequest<ResponseModelAccessibleCustomFields, ResponseError>(client, request);
+            return result;
+        }
+
+
 		#endregion
 
 		#region Webhooks
@@ -466,7 +546,7 @@ namespace Chinchilla.ClickUp
 		/// <summary>
 		/// Get a team's details. This team must be one of the authorized teams for this token.
 		/// </summary>
-		/// <param name="paramGetTeamByID">param object of get team by ID request</param>
+		/// <param name="paramsGetTeamById">param object of get team by ID request</param>
 		/// <returns>ResponseGeneric with ResponseTeam response object</returns>
 		public Task<ResponseGeneric<ResponseTeam, ResponseError>> GetTeamByIdAsync(ParamsGetTeamById paramsGetTeamById)
 		{
@@ -483,7 +563,7 @@ namespace Chinchilla.ClickUp
 		/// <summary>
 		/// Get a team's spaces. This team must be one of the authorized teams for this token.
 		/// </summary>
-		/// <param name="paramGetTeamSpace">param object of get team space request</param>
+		/// <param name="paramsGetTeamSpace">param object of get team space request</param>
 		/// <returns>ResponseGeneric with ResponseTeamSpace object expected</returns>
 		public Task<ResponseGeneric<ResponseTeamSpaces, ResponseError>> GetTeamSpacesAsync(ParamsGetTeamSpaces paramsGetTeamSpace)
 		{
@@ -534,7 +614,7 @@ namespace Chinchilla.ClickUp
 		/// <summary>
 		/// Create a folder
 		/// </summary>
-		/// <param name="paramsCreateList">param object of create folder request</param>
+		/// <param name="paramsCreateFolder">param object of create folder request</param>
 		/// <param name="requestData">RequestCreateFolder object</param>
 		/// <returns>ResponseGeneric with ModelFolder object expected</returns>
 		public Task<ResponseGeneric<ResponseModelFolder, ResponseError>> CreateFolderAsync(ParamsCreateFolder paramsCreateFolder, RequestCreateFolder requestData)
@@ -658,7 +738,6 @@ namespace Chinchilla.ClickUp
 		/// Get Tasks of the Team and filter its by optionalParams
 		/// </summary>
 		/// <param name="paramsGetTasks">param object of get tasks request</param>
-		/// <param name="optionalParams">OptionalParamsGetTask object</param>
 		/// <returns>ResponseGeneric with ResponseTasks object expected</returns>
 		public Task<ResponseGeneric<ResponseTasks, ResponseError>> GetTasksAsync(ParamsGetTasks paramsGetTasks)
 		{
