@@ -469,16 +469,34 @@ namespace Chinchilla.ClickUp
             return result;
         }
 
+        /// <summary>
+        /// Delete a task by id
+        /// </summary>
+        /// <param name="paramsGetTaskById">param object of get task by id request</param>
+        /// <returns>ResponseGeneric with ResponseModelTask response object</returns>
+        public ResponseGeneric<ResponseSuccess, ResponseError> DeleteTaskById(ParamsGetTaskById paramsGetTaskById)
+        {
+            var client = new RestClient(_baseAddress);
+            var resource = string.IsNullOrEmpty(paramsGetTaskById.CustomTaskId) ?
+                $"task/{paramsGetTaskById.TaskId}" :
+                $"task/{paramsGetTaskById.CustomTaskId}/?custom_task_ids=true&team_id={paramsGetTaskById.TeamId}";
+            var request = new RestRequest(resource, Method.DELETE);
+            request.AddHeader("authorization", AccessToken);
 
-		#endregion
+            // execute the request
+            var result = RestSharperHelper.ExecuteRequest<ResponseSuccess, ResponseError>(client, request);
+            return result;
+        }
 
-		#region Webhooks
-		/// <summary>
-		/// Get a team's webhooks. This team must be one of the authorized teams for this token.
-		/// </summary>
-		/// <param name="paramsGetTeamWebhook">param object of get team Webhook request</param>
-		/// <returns>ResponseGeneric with ResponseTeamWebhook response object</returns>
-		public ResponseGeneric<ResponseWebhooks, ResponseError> GetTeamWebhooks(ParamsGetTeamWebhooks paramsGetTeamWebhook)
+        #endregion
+
+        #region Webhooks
+        /// <summary>
+        /// Get a team's webhooks. This team must be one of the authorized teams for this token.
+        /// </summary>
+        /// <param name="paramsGetTeamWebhook">param object of get team Webhook request</param>
+        /// <returns>ResponseGeneric with ResponseTeamWebhook response object</returns>
+        public ResponseGeneric<ResponseWebhooks, ResponseError> GetTeamWebhooks(ParamsGetTeamWebhooks paramsGetTeamWebhook)
 		{
 			var client = new RestClient(_baseAddress);
 			var request = new RestRequest($"team/{paramsGetTeamWebhook.TeamId}/webhook", Method.GET);
