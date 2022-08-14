@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net48;net6.0</TargetFrameworks>
+		<TargetFrameworks>net6.0</TargetFrameworks>
 		<Authors>Chinchila Software</Authors>
 		<Company>Chinchila Software</Company>
 		<Description>C# / .NET / .NET Core library for manage in easy way the ClickUp API V2.</Description>
@@ -80,8 +80,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
-		<PackageReference Include="RestSharp" version="106.10.1" />
-		<PackageReference Include="RestSharp.Serializers.NewtonsoftJson" Version="106.10.1" />
+		<PackageReference Include="RestSharp" version="108.0.1" />
+		<PackageReference Include="RestSharp.Serializers.NewtonsoftJson" Version="108.0.1" />
 	</ItemGroup>
 
 	<ItemGroup>
