@@ -142,14 +142,15 @@ namespace Chinchilla.ClickUp.Params
 
 		#endregion
 
+		public CustomFieldFilter[] CustomFieldFilters { get; set; } = Array.Empty<CustomFieldFilter>();
 
-		#region Constructor
+        #region Constructor
 
-		/// <summary>
-		/// The constructor of ParamsGetTasks
-		/// </summary>
-		/// <param name="teamId"></param>
-		public ParamsGetTasks(string teamId)
+        /// <summary>
+        /// The constructor of ParamsGetTasks
+        /// </summary>
+        /// <param name="teamId"></param>
+        public ParamsGetTasks(string teamId)
 		{
 			TeamId = teamId;
 		}
@@ -172,4 +173,29 @@ namespace Chinchilla.ClickUp.Params
 
 		#endregion
 	}
+
+    public class CustomFieldFilter
+    {
+        public CustomFieldFilter(string fieldId, string @operator, string value)
+        {
+            FieldId = fieldId;
+            Operator = @operator;
+            Value = value;
+        }
+
+        public CustomFieldFilter(string fieldId, string @operator): this(fieldId, @operator, string.Empty)
+        {
+        }
+
+        public string FieldId { get; }
+        public string Operator { get; }
+        public string Value { get; }
+        public string ValueExpression =>
+            string.IsNullOrWhiteSpace(Value)
+                ? string.Empty
+                : $",\"value\":\"{Value}\"";
+
+        public string Expression => 
+          $"{{\"field_id\":\"{FieldId}\",\"operator\":\"{Operator}\"{ValueExpression}}}";
+    }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Chinchilla.ClickUp.Helpers;
 using Chinchilla.ClickUp.Params;
@@ -346,7 +347,26 @@ namespace Chinchilla.ClickUp
 		public ResponseGeneric<ResponseTasks, ResponseError> GetTasks(ParamsGetTasks paramsGetTasks)
 		{
 			var client = new RestClient(BaseAddress);
-			var request = new RestRequest($"team/{paramsGetTasks.TeamId}/task");
+            var resource = $"team/{paramsGetTasks.TeamId}/task";
+
+            var additionalParams = new List<string>();
+            if (paramsGetTasks.Page > 0)
+                additionalParams.Add($"page={paramsGetTasks.Page}");
+            if (paramsGetTasks.IncludeClosed is not null)
+                additionalParams.Add($"include_closed={paramsGetTasks.IncludeClosed.Value}");
+            if (paramsGetTasks.Subtasks is not null)
+                additionalParams.Add($"subtasks={paramsGetTasks.Subtasks.Value}");
+			if (paramsGetTasks.CustomFieldFilters.Any())
+				additionalParams.Add($"custom_fields=[{string.Join(',', paramsGetTasks.CustomFieldFilters.Select(f => f.Expression))}]");
+
+            // parameter below causes an error: {"err":"Internal server error","ECODE":"ITEMV2_003"}
+            //if (paramsGetTasks.SpaceIds is not null && paramsGetTasks.SpaceIds.Any())
+            //    additionalParams.Add($"space_ids=[{string.Join(',', paramsGetTasks.SpaceIds)}]");
+
+            if (additionalParams.Count > 0)
+                resource += "?" + string.Join("&", additionalParams);
+
+            var request = new RestRequest(resource);
 			request.AddHeader("authorization", AccessToken);
 
 			// execute the request
