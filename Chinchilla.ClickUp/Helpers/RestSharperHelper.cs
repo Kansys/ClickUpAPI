@@ -20,8 +20,15 @@ namespace Chinchilla.ClickUp.Helpers
 			});
 
 			// execute the request
-			var response = client.Execute(request);
-
+            RestResponse response;
+            var retries = 5;
+            do
+            {
+                response = client.Execute(request);
+                if (response.StatusCode != HttpStatusCode.TooManyRequests)
+                    break;
+                Thread.Sleep(30000);
+            } while (retries-- > 0);
             return ExtractResult<TResponseSuccess, TResponseError>(response);
         }
 
