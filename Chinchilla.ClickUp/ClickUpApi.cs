@@ -519,7 +519,7 @@ namespace Chinchilla.ClickUp
         }
 
         /// <summary>
-        /// Get a task by id
+        /// Get task's comments by a task id
         /// </summary>
         /// <param name="paramsGetTaskById">param object of get task by id request</param>
         /// <returns>ResponseGeneric with ResponseModelTask response object</returns>
@@ -536,6 +536,20 @@ namespace Chinchilla.ClickUp
             return result;
         }
 
+        public ResponseGeneric<ResponseCreatedTaskComment, ResponseError> CreateTaskComment(
+            ParamsGetTaskById paramsGetTaskById, RequestCreateTaskComment requestData)
+        {
+			var client = GetRestClient();
+            var resource = string.IsNullOrEmpty(paramsGetTaskById.CustomTaskId) ?
+                $"task/{paramsGetTaskById.TaskId}/comment" :
+                $"task/{paramsGetTaskById.CustomTaskId}/comment?custom_task_ids=true&team_id={paramsGetTaskById.TeamId}";
+            var request = new RestRequest(resource, Method.Post);
+            request.AddHeader("authorization", AccessToken);
+            request.AddJsonBody(requestData);
+
+            var result = RestSharperHelper.ExecuteRequest<ResponseCreatedTaskComment, ResponseError>(client, request);
+            return result;
+        }
         #endregion
 
         #region Webhooks

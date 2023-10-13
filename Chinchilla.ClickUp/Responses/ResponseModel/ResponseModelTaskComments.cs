@@ -41,13 +41,38 @@ public class CommentEntry
     public string Text { get; set; }
 
     [JsonProperty("attributes")]
-    public Attributes Attributes { get; set; }
+    public Attributes Attributes { get; set; } = new(); // An instance is required to avoid "Cannot destructure property 'link' of 'attributes'" error
 
     [JsonProperty("type")]
     public string EntryType { get; set; }
 
     [JsonProperty("attachment")]
     public Attachment Attachment { get; set; }
+
+    public static readonly CommentEntry NextLine = new() { Text = "\n" };
+
+    public static CommentEntry CreateText(string text, bool isBold = false, bool isItalic = false, bool isUnderline = false, bool isStrike = false) =>
+        new()
+        {
+            Text = text,
+            Attributes = new()
+            {
+                IsBold = isBold,
+                IsItalic = isItalic,
+                IsUnderline = isUnderline,
+                IsStrike = isStrike
+            },
+        };
+
+    public static CommentEntry CreateLink(string text, string link) =>
+        new()
+        {
+            Text = text,
+            Attributes = new()
+            {
+                Link = link
+            },
+        };
 }
 
 public class Attributes
@@ -57,6 +82,21 @@ public class Attributes
 
     [JsonProperty("code")]
     public bool Code { get; set; }
+
+    [JsonProperty("bold")]
+    public bool IsBold { get; set; }
+
+    [JsonProperty("italic")]
+    public bool IsItalic { get; set; }
+
+    [JsonProperty("underline")]
+    public bool IsUnderline { get; set; }
+
+    [JsonProperty("strike")]
+    public bool IsStrike { get; set; }
+
+    [JsonProperty("link")] 
+    public string Link { get; set; } 
 }
 
 public class Attachment

@@ -29,9 +29,14 @@ namespace Chinchilla.ClickUp.Helpers
 		public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer)
 		{
 			object value = reader.Value;
-			if (value != null) return DateTimeOffset.FromUnixTimeMilliseconds(long.Parse((string)value)).DateTime;
-			return null;
-		}
+            if (value == null) return null;
+
+            var milliseconds = value is string s
+                ? long.Parse(s)
+                : (long)value;
+            return DateTimeOffset.FromUnixTimeMilliseconds(milliseconds).DateTime;
+
+        }
 
 		/// <summary>
 		/// Get Datetime and serialize it to long for Unix method
