@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using RestSharp;
-using RestSharp.Serializers.NewtonsoftJson;
 
 namespace Chinchilla.ClickUp.Helpers
 {
@@ -13,13 +12,6 @@ namespace Chinchilla.ClickUp.Helpers
 			where TResponseSuccess : IResponse
 			where TResponseError : IResponse
 		{
-			// attach the JSON.NET serializer for RestSharp
-			client.UseNewtonsoftJson(new JsonSerializerSettings {
-				Converters = converters,
-				DateParseHandling = DateParseHandling.None
-			});
-
-			// execute the request
             RestResponse response;
             var retries = 5;
             do
@@ -36,10 +28,6 @@ namespace Chinchilla.ClickUp.Helpers
 			where TResponseSuccess : IResponse
 			where TResponseError : IResponse
 		{
-			// attach the JSON.NET serializer for RestSharp
-			client.UseNewtonsoftJson();
-
-			// execute the request
 			var response = await client.ExecuteAsync(request, CancellationToken.None);
 
             return ExtractResult<TResponseSuccess, TResponseError>(response);

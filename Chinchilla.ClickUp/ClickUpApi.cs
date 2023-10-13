@@ -7,7 +7,9 @@ using Chinchilla.ClickUp.Params;
 using Chinchilla.ClickUp.Requests;
 using Chinchilla.ClickUp.Responses;
 using Chinchilla.ClickUp.Responses.Model;
+using Newtonsoft.Json;
 using RestSharp;
+using RestSharp.Serializers.NewtonsoftJson;
 
 namespace Chinchilla.ClickUp
 {
@@ -22,9 +24,11 @@ namespace Chinchilla.ClickUp
 		/// <summary>
 		/// Base Address of API call
 		/// </summary>
-		private static readonly Uri BaseAddress = new Uri("https://api.clickup.com/api/v2/");
+		private static readonly Uri BaseAddress = new("https://api.clickup.com/api/v2/");
 
-		/// <summary>
+        private static readonly JsonSerializerSettings JsonSerializerSettings = new() { DateParseHandling = DateParseHandling.None };
+
+        /// <summary>
 		/// The Access Token to add during the request
 		/// </summary>
 		public string AccessToken { get; protected set; }
@@ -48,7 +52,7 @@ namespace Chinchilla.ClickUp
 		/// <param name="paramAccessToken">param access token object</param>
 		public static ClickUpApi Create(ParamsAccessToken paramAccessToken)
 		{
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest("oauth/token", Method.Post);
 			request.AddParameter("client_id", paramAccessToken.ClientId);
 			request.AddParameter("client_secret", paramAccessToken.ClientSecret);
@@ -73,7 +77,7 @@ namespace Chinchilla.ClickUp
 		/// <param name="paramAccessToken">param access token object</param>
 		public static Task<ClickUpApi> CreateAsync(ParamsAccessToken paramAccessToken)
 		{
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest("oauth/token", Method.Post);
 			request.AddParameter("client_id", paramAccessToken.ClientId);
 			request.AddParameter("client_secret", paramAccessToken.ClientSecret);
@@ -108,7 +112,7 @@ namespace Chinchilla.ClickUp
 		/// <returns>ResponseGeneric with ResponseAuthorizedUser response object</returns>
 		public ResponseGeneric<ResponseAuthorizedUser, ResponseError> GetAuthorizedUser()
 		{
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"user");
 			request.AddHeader("authorization", AccessToken);
 
@@ -125,7 +129,7 @@ namespace Chinchilla.ClickUp
 		/// <returns>ResponseGeneric with ResponseAuthorizedTeams response object</returns>
 		public ResponseGeneric<ResponseAuthorizedTeams, ResponseError> GetAuthorizedTeams()
 		{
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"team");
 			request.AddHeader("authorization", AccessToken);
 
@@ -141,7 +145,7 @@ namespace Chinchilla.ClickUp
 		/// <returns>ResponseGeneric with ResponseTeam response object</returns>
 		public ResponseGeneric<ResponseTeam, ResponseError> GetTeamById(ParamsGetTeamById paramsGetTeamById)
 		{
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"team/{paramsGetTeamById.TeamId}");
 			request.AddHeader("authorization", AccessToken);
 
@@ -159,7 +163,7 @@ namespace Chinchilla.ClickUp
 		/// <returns>ResponseGeneric with ResponseTeamSpace response object</returns>
 		public ResponseGeneric<ResponseTeamSpaces, ResponseError> GetTeamSpaces(ParamsGetTeamSpaces paramsGetTeamSpace)
 		{
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"team/{paramsGetTeamSpace.TeamId}/space");
 			request.AddHeader("authorization", AccessToken);
 
@@ -178,7 +182,7 @@ namespace Chinchilla.ClickUp
 		{
 			requestData.ValidateData();
 
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"team/{paramsCreateTeamSpace.TeamId}/space", Method.Post);
 			request.AddHeader("authorization", AccessToken);
 			request.AddJsonBody(requestData);
@@ -197,7 +201,7 @@ namespace Chinchilla.ClickUp
 		/// <returns>ResponseGeneric with ResponseSpaceFolders response object</returns>
 		public ResponseGeneric<ResponseSpaceFolders, ResponseError> GetSpaceFolders(ParamsGetSpaceFolders paramsGetSpaceFolders)
 		{
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"space/{paramsGetSpaceFolders.SpaceId}/folder");
 			request.AddHeader("authorization", AccessToken);
 
@@ -216,7 +220,7 @@ namespace Chinchilla.ClickUp
 		{
 			requestData.ValidateData();
 
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"space/{paramsCreateFolder.SpaceId}/folder", Method.Post);
 			request.AddHeader("authorization", AccessToken);
 			request.AddJsonBody(requestData);
@@ -235,7 +239,7 @@ namespace Chinchilla.ClickUp
 		/// <returns>ResponseGeneric with ResponseModelList response object</returns>
 		public ResponseGeneric<ResponseModelList, ResponseError> GetListById(ParamsGetListById paramsGetListById)
 		{
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"list/{paramsGetListById.ListId}");
 			request.AddHeader("authorization", AccessToken);
 
@@ -254,7 +258,7 @@ namespace Chinchilla.ClickUp
 		{
 			requestData.ValidateData();
 
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"folder/{paramsCreateList.FolderId}/list", Method.Post);
 			request.AddHeader("authorization", AccessToken);
 			request.AddJsonBody(requestData);
@@ -271,7 +275,7 @@ namespace Chinchilla.ClickUp
 		/// <returns>ResponseGeneric with ResponseFolderlessLists response object</returns>
 		public ResponseGeneric<ResponseFolderlessLists, ResponseError> GetFolderlessLists(ParamsGetFolderlessLists paramsGetFolderlessLists)
 		{
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"space/{paramsGetFolderlessLists.SpaceId}/list");
 			request.AddHeader("authorization", AccessToken);
 
@@ -290,7 +294,7 @@ namespace Chinchilla.ClickUp
 		{
 			requestData.ValidateData();
 
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"space/{paramsCreateList.SpaceId}/list", Method.Post);
 			request.AddHeader("authorization", AccessToken);
 			request.AddJsonBody(requestData);
@@ -308,7 +312,7 @@ namespace Chinchilla.ClickUp
 		/// <returns>ResponseGeneric with ModelList response object</returns>
 		public ResponseGeneric<ResponseModelList, ResponseError> EditList(ParamsEditList paramsEditList, RequestEditList requestData)
 		{
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"list/{paramsEditList.ListId}", Method.Put);
 			request.AddHeader("authorization", AccessToken);
 			request.AddJsonBody(requestData);
@@ -327,7 +331,7 @@ namespace Chinchilla.ClickUp
 		/// <returns>ResponseGeneric with ResponseModelTask response object</returns>
 		public ResponseGeneric<ResponseModelTask, ResponseError> GetTaskById(ParamsGetTaskById paramsGetTaskById)
 		{
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
             var resource = string.IsNullOrEmpty(paramsGetTaskById.CustomTaskId) ? 
                 $"task/{paramsGetTaskById.TaskId}" :
                 $"task/{paramsGetTaskById.CustomTaskId}/?custom_task_ids=true&team_id={paramsGetTaskById.TeamId}";
@@ -346,7 +350,7 @@ namespace Chinchilla.ClickUp
 		/// <returns>ResponseGeneric with ResponseTasks response object</returns>
 		public ResponseGeneric<ResponseTasks, ResponseError> GetTasks(ParamsGetTasks paramsGetTasks)
 		{
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
             var resource = $"team/{paramsGetTasks.TeamId}/task";
 
             var additionalParams = new List<string>();
@@ -381,7 +385,7 @@ namespace Chinchilla.ClickUp
         /// <returns>ResponseGeneric with ResponseTasks response object</returns>
         public ResponseGeneric<ResponseTasks, ResponseError> GetTasks(ParamsGetTasksFromList paramsGetTasks)
         {
-            var client = new RestClient(BaseAddress);
+            var client = GetRestClient();
             var resource = $"list/{paramsGetTasks.ListId}/task";
 
             var additionalParams = new List<string>();
@@ -413,7 +417,7 @@ namespace Chinchilla.ClickUp
 		{
 			requestData.ValidateData();
 
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var createListRequest = new RestRequest($"list/{paramsCreateTaskInList.ListId}/task", Method.Post);
 			createListRequest.AddHeader("authorization", AccessToken);
 			createListRequest.AddJsonBody(requestData);
@@ -432,7 +436,7 @@ namespace Chinchilla.ClickUp
 		public ResponseGeneric<ResponseModelTask, ResponseError> EditTask(ParamsEditTask paramsEditTask, RequestEditTask requestData)
         {
             throw new ApplicationException("This method damages the task. Do not use it without refactoring.");
-            //var client = new RestClient(BaseAddress);
+            //var client = GetRestClient();
             //var request = new RestRequest($"task/{paramsEditTask.TaskId}", Method.Put);
             //request.AddHeader("authorization", AccessToken);
             //request.AddJsonBody(requestData);
@@ -450,7 +454,7 @@ namespace Chinchilla.ClickUp
         /// <returns>ResponseGeneric with ResponseSuccess response object</returns>
         public ResponseGeneric<ResponseModelTask, ResponseError> EditTask(ParamsEditTask paramsEditTask, object requestData)
         {
-            var client = new RestClient(BaseAddress);
+            var client = GetRestClient();
             var request = new RestRequest($"task/{paramsEditTask.TaskId}", Method.Put);
             request.AddHeader("authorization", AccessToken);
             request.AddJsonBody(requestData);
@@ -469,7 +473,7 @@ namespace Chinchilla.ClickUp
 		/// <returns>ResponseGeneric with ResponseSuccess response object</returns>
 		public ResponseGeneric<ResponseSuccess, ResponseError> EditTaskCustomField(ParamsEditTaskCustomField paramsEditTaskCustomField, object value)
         {
-            var client = new RestClient(BaseAddress);
+            var client = GetRestClient();
             var request = new RestRequest($"task/{paramsEditTaskCustomField.TaskId}/field/{paramsEditTaskCustomField.FieldId}/", Method.Post);
             request.AddHeader("authorization", AccessToken);
             request.AddJsonBody(new{ value});
@@ -486,7 +490,7 @@ namespace Chinchilla.ClickUp
         /// <returns></returns>
         public ResponseGeneric<ResponseModelAccessibleCustomFields, ResponseError> GetAccessibleCustomFields(ParamsGetListById paramsGetListById)
         {
-            var client = new RestClient(BaseAddress);
+            var client = GetRestClient();
             var request = new RestRequest($"list/{paramsGetListById.ListId}/field");
             request.AddHeader("authorization", AccessToken);
 
@@ -502,7 +506,7 @@ namespace Chinchilla.ClickUp
         /// <returns>ResponseGeneric with ResponseModelTask response object</returns>
         public ResponseGeneric<ResponseSuccess, ResponseError> DeleteTaskById(ParamsGetTaskById paramsGetTaskById)
         {
-            var client = new RestClient(BaseAddress);
+            var client = GetRestClient();
             var resource = string.IsNullOrEmpty(paramsGetTaskById.CustomTaskId) ?
                 $"task/{paramsGetTaskById.TaskId}" :
                 $"task/{paramsGetTaskById.CustomTaskId}/?custom_task_ids=true&team_id={paramsGetTaskById.TeamId}";
@@ -524,7 +528,7 @@ namespace Chinchilla.ClickUp
         /// <returns>ResponseGeneric with ResponseTeamWebhook response object</returns>
         public ResponseGeneric<ResponseWebhooks, ResponseError> GetTeamWebhooks(ParamsGetTeamWebhooks paramsGetTeamWebhook)
 		{
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"team/{paramsGetTeamWebhook.TeamId}/webhook");
 			request.AddHeader("authorization", AccessToken);
 
@@ -543,7 +547,7 @@ namespace Chinchilla.ClickUp
 		{
 			requestData.ValidateData();
 
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"team/{paramsCreateTeamWebhook.TeamId}/webhook", Method.Post);
 			request.AddHeader("authorization", AccessToken);
 			request.AddJsonBody(requestData);
@@ -565,7 +569,7 @@ namespace Chinchilla.ClickUp
 		/// <returns>ResponseGeneric with ResponseAuthorizedUser object expected</returns>
 		public Task<ResponseGeneric<ResponseAuthorizedUser, ResponseError>> GetAuthorizedUserAsync()
 		{
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"user");
 			request.AddHeader("authorization", AccessToken);
 
@@ -581,7 +585,7 @@ namespace Chinchilla.ClickUp
 		/// <returns>ResponseGeneric with ResponseAuthorizedTeams expected</returns>
 		public Task<ResponseGeneric<ResponseAuthorizedTeams, ResponseError>> GetAuthorizedTeamsAsync()
 		{
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"team");
 			request.AddHeader("authorization", AccessToken);
 
@@ -596,7 +600,7 @@ namespace Chinchilla.ClickUp
 		/// <returns>ResponseGeneric with ResponseTeam response object</returns>
 		public Task<ResponseGeneric<ResponseTeam, ResponseError>> GetTeamByIdAsync(ParamsGetTeamById paramsGetTeamById)
 		{
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"team/{paramsGetTeamById.TeamId}");
 			request.AddHeader("authorization", AccessToken);
 
@@ -613,7 +617,7 @@ namespace Chinchilla.ClickUp
 		/// <returns>ResponseGeneric with ResponseTeamSpace object expected</returns>
 		public Task<ResponseGeneric<ResponseTeamSpaces, ResponseError>> GetTeamSpacesAsync(ParamsGetTeamSpaces paramsGetTeamSpace)
 		{
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"team/{paramsGetTeamSpace.TeamId}/space");
 			request.AddHeader("authorization", AccessToken);
 
@@ -631,7 +635,7 @@ namespace Chinchilla.ClickUp
 		{
 			requestData.ValidateData();
 
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"team/{paramsCreateTeamSpace.TeamId}/space", Method.Post);
 			request.AddHeader("authorization", AccessToken);
 			request.AddJsonBody(requestData);
@@ -649,7 +653,7 @@ namespace Chinchilla.ClickUp
 		/// <returns>ResponseGeneric with ResponseSpaceFolders object expected</returns>
 		public Task<ResponseGeneric<ResponseSpaceFolders, ResponseError>> GetSpaceFoldersAsync(ParamsGetSpaceFolders paramsGetSpaceFolders)
 		{
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"space/{paramsGetSpaceFolders.SpaceId}/folder");
 			request.AddHeader("authorization", AccessToken);
 
@@ -667,7 +671,7 @@ namespace Chinchilla.ClickUp
 		{
 			requestData.ValidateData();
 
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"space/{paramsCreateFolder.SpaceId}/folder", Method.Post);
 			request.AddHeader("authorization", AccessToken);
 			request.AddJsonBody(requestData);
@@ -685,7 +689,7 @@ namespace Chinchilla.ClickUp
 		/// <returns>ResponseGeneric with ResponseModelList response object</returns>
 		public Task<ResponseGeneric<ResponseModelList, ResponseError>> GetListByIdAsync(ParamsGetListById paramsGetListById)
 		{
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"list/{paramsGetListById.ListId}");
 			request.AddHeader("authorization", AccessToken);
 
@@ -703,7 +707,7 @@ namespace Chinchilla.ClickUp
 		{
 			requestData.ValidateData();
 
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"folder/{paramsCreateList.FolderId}/list", Method.Post);
 			request.AddHeader("authorization", AccessToken);
 			request.AddJsonBody(requestData);
@@ -719,7 +723,7 @@ namespace Chinchilla.ClickUp
 		/// <returns>ResponseGeneric with ResponseFolderlessLists response object</returns>
 		public Task<ResponseGeneric<ResponseFolderlessLists, ResponseError>> GetFolderlessListsAsync(ParamsGetFolderlessLists paramsGetFolderlessLists)
 		{
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"space/{paramsGetFolderlessLists.SpaceId}/list");
 			request.AddHeader("authorization", AccessToken);
 
@@ -737,7 +741,7 @@ namespace Chinchilla.ClickUp
 		{
 			requestData.ValidateData();
 
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"space/{paramsCreateList.SpaceId}/list", Method.Post);
 			request.AddHeader("authorization", AccessToken);
 			request.AddJsonBody(requestData);
@@ -754,7 +758,7 @@ namespace Chinchilla.ClickUp
 		/// <returns>ResponseGeneric with ModelList object expected</returns>
 		public Task<ResponseGeneric<ResponseModelList, ResponseError>> EditListAsync(ParamsEditList paramsEditList, RequestEditList requestData)
 		{
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"list/{paramsEditList.ListId}", Method.Put);
 			request.AddHeader("authorization", AccessToken);
 			request.AddJsonBody(requestData);
@@ -772,7 +776,7 @@ namespace Chinchilla.ClickUp
 		/// <returns>ResponseGeneric with ResponseModelTask response object</returns>
 		public Task<ResponseGeneric<ResponseModelTask, ResponseError>> GetTaskByIdAsync(ParamsGetTaskById paramsGetTaskById)
 		{
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"task/{paramsGetTaskById.TaskId}");
 			request.AddHeader("authorization", AccessToken);
 
@@ -787,7 +791,7 @@ namespace Chinchilla.ClickUp
 		/// <returns>ResponseGeneric with ResponseTasks object expected</returns>
 		public Task<ResponseGeneric<ResponseTasks, ResponseError>> GetTasksAsync(ParamsGetTasks paramsGetTasks)
 		{
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"team/{paramsGetTasks.TeamId}/task");
 			request.AddHeader("authorization", AccessToken);
 
@@ -805,7 +809,7 @@ namespace Chinchilla.ClickUp
 		{
 			requestData.ValidateData();
 
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var createListRequest = new RestRequest($"list/{paramsCreateTaskInList.ListId}/task", Method.Post);
 			createListRequest.AddHeader("authorization", AccessToken);
 			createListRequest.AddJsonBody(requestData);
@@ -823,7 +827,7 @@ namespace Chinchilla.ClickUp
 		public Task<ResponseGeneric<ResponseModelTask, ResponseError>> EditTaskAsync(ParamsEditTask paramsEditTask, RequestEditTask requestData)
 		{
             throw new ApplicationException("This method damages the task. Do not use it without refactoring.");
-			//var client = new RestClient(BaseAddress);
+			//var client = GetRestClient();
 			//var request = new RestRequest($"task/{paramsEditTask.TaskId}", Method.Put);
 			//request.AddHeader("authorization", AccessToken);
 			//request.AddJsonBody(requestData);
@@ -841,7 +845,7 @@ namespace Chinchilla.ClickUp
 		/// <returns>ResponseGeneric with ResponseTeamWebhook response object</returns>
 		public Task<ResponseGeneric<ResponseWebhooks, ResponseError>> GetTeamWebhooksAsync(ParamsGetTeamWebhooks paramsGetTeamWebhook)
 		{
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"team/{paramsGetTeamWebhook.TeamId}/webhook");
 			request.AddHeader("authorization", AccessToken);
 
@@ -859,7 +863,7 @@ namespace Chinchilla.ClickUp
 		{
 			requestData.ValidateData();
 
-			var client = new RestClient(BaseAddress);
+			var client = GetRestClient();
 			var request = new RestRequest($"team/{paramsCreateTeamWebhook.TeamId}/webhook", Method.Post);
 			request.AddHeader("authorization", AccessToken);
 			request.AddJsonBody(requestData);
@@ -867,8 +871,11 @@ namespace Chinchilla.ClickUp
 			// execute the request
 			return RestSharperHelper.ExecuteRequestAsync<ResponseWebhook, ResponseError>(client, request);
 		}
-		#endregion
+        #endregion
 
-		#endregion
-	}
+        #endregion
+
+        private static RestClient GetRestClient() =>
+            new (BaseAddress, configureSerialization: s => s.UseNewtonsoftJson(JsonSerializerSettings));
+    }
 }
