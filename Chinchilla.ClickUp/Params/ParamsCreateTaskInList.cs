@@ -6,7 +6,7 @@ namespace Chinchilla.ClickUp.Params
 {
 
 	/// <summary>
-	/// The param object of CReate Task in List Request
+	/// The param object of Create Task in List Request
 	/// </summary>
 	public class ParamsCreateTaskInList
 	{
