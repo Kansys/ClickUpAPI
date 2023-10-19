@@ -22,8 +22,8 @@ namespace Chinchilla.ClickUp.Requests
 		/// <summary>
 		/// Content of the task
 		/// </summary>
-		[JsonProperty("content")]
-		public string Content { get; set; }
+		[JsonProperty("description")]
+		public string Description { get; set; }
 
 		/// <summary>
 		/// List of user id that will be added to this task
@@ -38,7 +38,7 @@ namespace Chinchilla.ClickUp.Requests
 		public string Status { get; set; }
 
 		/// <summary>
-		/// Prioriry of the task
+		/// Priority of the task
 		/// </summary>
 		[JsonProperty("priority")]
 		public TaskPriority? Priority { get; set; }
@@ -49,17 +49,16 @@ namespace Chinchilla.ClickUp.Requests
 		[JsonProperty("due_date")]
 		[JsonConverter(typeof(JsonConverterDateTimeMilliseconds))]
 		public DateTime? DueDate { get; set; }
+        #endregion
 
-		#endregion
 
+        #region Constructor
 
-		#region Constructor
-
-		/// <summary>
-		/// Constructor of RequestCreateTaskInList
-		/// </summary>
-		/// <param name="name"></param>
-		public RequestCreateTaskInList(string name)
+        /// <summary>
+        /// Constructor of RequestCreateTaskInList
+        /// </summary>
+        /// <param name="name"></param>
+        public RequestCreateTaskInList(string name)
 		{
 			Name = name;
 		}

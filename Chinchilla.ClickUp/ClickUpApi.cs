@@ -321,15 +321,29 @@ namespace Chinchilla.ClickUp
 			ResponseGeneric<ResponseModelList, ResponseError> result = RestSharperHelper.ExecuteRequest<ResponseModelList, ResponseError>(client, request);
 			return result;
 		}
-		#endregion
 
-		#region Tasks
-		/// <summary>
-		/// Get a task by id
-		/// </summary>
-		/// <param name="paramsGetTaskById">param object of get task by id request</param>
-		/// <returns>ResponseGeneric with ResponseModelTask response object</returns>
-		public ResponseGeneric<ResponseModelTask, ResponseError> GetTaskById(ParamsGetTaskById paramsGetTaskById)
+        /// <summary>
+        /// View the people who have access to a List.
+        /// </summary>
+        public ResponseGeneric<ResponseModelListMembers, ResponseError> GetMembersInList(ParamsGetMembersInList paramsGetMembersInList)
+        {
+            var client = GetRestClient();
+            var request = new RestRequest($"list/{paramsGetMembersInList.ListId}/member");
+            request.AddHeader("authorization", AccessToken);
+
+            // execute the request
+            var result = RestSharperHelper.ExecuteRequest<ResponseModelListMembers, ResponseError>(client, request);
+            return result;
+        }
+        #endregion
+
+        #region Tasks
+        /// <summary>
+        /// Get a task by id
+        /// </summary>
+        /// <param name="paramsGetTaskById">param object of get task by id request</param>
+        /// <returns>ResponseGeneric with ResponseModelTask response object</returns>
+        public ResponseGeneric<ResponseModelTask, ResponseError> GetTaskById(ParamsGetTaskById paramsGetTaskById)
 		{
 			var client = GetRestClient();
             var resource = string.IsNullOrEmpty(paramsGetTaskById.CustomTaskId) ? 
@@ -867,7 +881,8 @@ namespace Chinchilla.ClickUp
 			//// execute the request
 			//return RestSharperHelper.ExecuteRequestAsync<ResponseModelTask, ResponseError>(client, request);
 		}
-		#endregion
+		
+        #endregion
 
 		#region Webhooks
 		/// <summary>
