@@ -3,6 +3,7 @@ using Chinchilla.ClickUp.Enums;
 using System;
 using System.Collections.Generic;
 using Chinchilla.ClickUp.Helpers;
+using Chinchilla.ClickUp.Responses.Model;
 
 namespace Chinchilla.ClickUp.Requests
 {
@@ -49,6 +50,18 @@ namespace Chinchilla.ClickUp.Requests
 		[JsonProperty("due_date")]
 		[JsonConverter(typeof(JsonConverterDateTimeMilliseconds))]
 		public DateTime? DueDate { get; set; }
+
+        /// <summary>
+        /// List of Model Tags with the information of the tag associated at this task
+        /// </summary>
+        [JsonProperty("tags")]
+        public List<string> Tags { get; set; } = new();
+
+        /// <summary>
+        /// List of Custom fields
+        /// </summary>
+        [JsonProperty("custom_fields")]
+        public List<RequestCreateTaskInListCustomField> CustomFields { get; set; } = new();
         #endregion
 
 
@@ -81,4 +94,19 @@ namespace Chinchilla.ClickUp.Requests
 
 		#endregion
 	}
+
+    public class RequestCreateTaskInListCustomField
+    {
+        public RequestCreateTaskInListCustomField(string id, string text)
+        {
+            Id = id;
+			Value = text;
+        }
+
+        [JsonProperty("id")]
+        public string Id { get; set; }
+
+        [JsonProperty("value")]
+        public string Value { get; set; }
+    }
 }
