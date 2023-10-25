@@ -97,16 +97,16 @@ namespace Chinchilla.ClickUp.Requests
 
     public class RequestCreateTaskInListCustomField
     {
-        public RequestCreateTaskInListCustomField(string id, string text)
+        public RequestCreateTaskInListCustomField(string id, object value)
         {
             Id = id;
-			Value = text;
+			Value = value;
         }
 
         [JsonProperty("id")]
         public string Id { get; set; }
 
         [JsonProperty("value")]
-        public string Value { get; set; }
+        public object Value { get; set; }
     }
 }
