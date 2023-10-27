@@ -14,11 +14,11 @@ using RestSharp.Serializers.NewtonsoftJson;
 namespace Chinchilla.ClickUp
 {
 
-	/// <summary>
+    /// <summary>
 	/// Object that interact through methods the API (v2) of ClickUp
 	/// </summary>
-	public class ClickUpApi
-	{
+	public class ClickUpApi : IClickUpApi
+    {
 		#region Private Attributes
 
 		/// <summary>
