@@ -18,4 +18,11 @@ public interface IClickUpApi
     /// </summary>
     ResponseGeneric<ResponseCreatedTaskComment, ResponseError> CreateTaskComment(
         ParamsGetTaskById paramsGetTaskById, RequestCreateTaskComment requestData);
+
+    /// <summary>
+    /// Get a space's folders. The folders' lists will also be included.
+    /// </summary>
+    /// <param name="paramsGetSpaceFolders">param object of get space folder request</param>
+    /// <returns>ResponseGeneric with ResponseSpaceFolders response object</returns>
+    ResponseGeneric<ResponseSpaceFolders, ResponseError> GetSpaceFolders(ParamsGetSpaceFolders paramsGetSpaceFolders);
 }

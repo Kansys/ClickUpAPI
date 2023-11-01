@@ -19,7 +19,7 @@ namespace Chinchilla.ClickUp.Helpers
                 response = client.Execute(request);
                 if (response.StatusCode != HttpStatusCode.TooManyRequests)
                     break;
-                Thread.Sleep(30000);
+                Thread.Sleep(20000);
             } while (retries-- > 0);
             return ExtractResult<TResponseSuccess, TResponseError>(response);
         }
