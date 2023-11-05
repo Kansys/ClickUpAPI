@@ -25,4 +25,12 @@ public interface IClickUpApi
     /// <param name="paramsGetSpaceFolders">param object of get space folder request</param>
     /// <returns>ResponseGeneric with ResponseSpaceFolders response object</returns>
     ResponseGeneric<ResponseSpaceFolders, ResponseError> GetSpaceFolders(ParamsGetSpaceFolders paramsGetSpaceFolders);
+
+    /// <summary>
+    /// Edit Task custom field.
+    /// </summary>
+    /// <param name="paramsEditTaskCustomField">param object of Edit Task request</param>
+    /// <param name="value">custom field value as object</param>
+    /// <returns>ResponseGeneric with ResponseSuccess response object</returns>
+    ResponseGeneric<ResponseSuccess, ResponseError> EditTaskCustomField(ParamsEditTaskCustomField paramsEditTaskCustomField, object value);
 }
