@@ -572,48 +572,63 @@ namespace Chinchilla.ClickUp
         /// </summary>
         /// <param name="paramsGetTeamWebhook">param object of get team Webhook request</param>
         /// <returns>ResponseGeneric with ResponseTeamWebhook response object</returns>
-        public ResponseGeneric<ResponseWebhooks, ResponseError> GetTeamWebhooks(ParamsGetTeamWebhooks paramsGetTeamWebhook)
+        public ResponseGeneric<ResponseWebhooks, ResponseError> GetWebhooks(ParamsGetTeamWebhooks paramsGetTeamWebhook)
 		{
 			var client = GetRestClient();
 			var request = new RestRequest($"team/{paramsGetTeamWebhook.TeamId}/webhook");
 			request.AddHeader("authorization", AccessToken);
 
 			// execute the request
-			ResponseGeneric<ResponseWebhooks, ResponseError> result = RestSharperHelper.ExecuteRequest<ResponseWebhooks, ResponseError>(client, request);
+			var result = RestSharperHelper.ExecuteRequest<ResponseWebhooks, ResponseError>(client, request);
 			return result;
 		}
 
 		/// <summary>
 		/// Create a webhook in a Team
 		/// </summary>
-		/// <param name="paramsCreateTeamWebhook">param object of create webhook request</param>
+		/// <param name="paramsCreateWebhook">param object of create webhook request</param>
 		/// <param name="requestData">RequestCreateTeamWebhook object</param>
 		/// <returns>ResponseGeneric with ResponseWebhook response object</returns>
-		public ResponseGeneric<ResponseWebhook, ResponseError> CreateTeamWebhook(ParamsCreateTeamWebhook paramsCreateTeamWebhook, RequestCreateTeamWebhook requestData)
+		public ResponseGeneric<ResponseWebhook, ResponseError> CreateWebhook(ParamsCreateWebhook paramsCreateWebhook, RequestCreateWebhook requestData)
 		{
 			requestData.ValidateData();
 
 			var client = GetRestClient();
-			var request = new RestRequest($"team/{paramsCreateTeamWebhook.TeamId}/webhook", Method.Post);
+			var request = new RestRequest($"team/{paramsCreateWebhook.TeamId}/webhook", Method.Post);
 			request.AddHeader("authorization", AccessToken);
 			request.AddJsonBody(requestData);
 
 			// execute the request
-			ResponseGeneric<ResponseWebhook, ResponseError> result = RestSharperHelper.ExecuteRequest<ResponseWebhook, ResponseError>(client, request);
+			var result = RestSharperHelper.ExecuteRequest<ResponseWebhook, ResponseError>(client, request);
 			return result;
 		}
-		#endregion
 
-		#endregion
+        public ResponseGeneric<ResponseWebhook, ResponseError> EditWebhook(ParamsEditWebhook paramEditWebhook, RequestEditWebhook requestData)
+        {
+            requestData.ValidateData();
 
-		#region API Methods Async
+            var client = GetRestClient();
+            var request = new RestRequest($"webhook/{paramEditWebhook.WebhookId}", Method.Put);
+            request.AddHeader("authorization", AccessToken);
+            request.AddJsonBody(requestData);
 
-		#region User
-		/// <summary>
-		/// Get the user that belongs to this token
-		/// </summary>
-		/// <returns>ResponseGeneric with ResponseAuthorizedUser object expected</returns>
-		public Task<ResponseGeneric<ResponseAuthorizedUser, ResponseError>> GetAuthorizedUserAsync()
+            // execute the request
+            var result = RestSharperHelper.ExecuteRequest<ResponseWebhook, ResponseError>(client, request);
+            return result;
+        }
+
+        #endregion
+
+        #endregion
+
+        #region API Methods Async
+
+        #region User
+        /// <summary>
+        /// Get the user that belongs to this token
+        /// </summary>
+        /// <returns>ResponseGeneric with ResponseAuthorizedUser object expected</returns>
+        public Task<ResponseGeneric<ResponseAuthorizedUser, ResponseError>> GetAuthorizedUserAsync()
 		{
 			var client = GetRestClient();
 			var request = new RestRequest($"user");
@@ -906,7 +921,7 @@ namespace Chinchilla.ClickUp
 		/// <param name="paramsCreateTeamWebhook">param object of create webhook request</param>
 		/// <param name="requestData">RequestCreateTeamWebhook object</param>
 		/// <returns>ResponseGeneric with ResponseWebhook response object</returns>
-		public Task<ResponseGeneric<ResponseWebhook, ResponseError>> CreateTeamWebhookAsync(ParamsCreateTeamWebhook paramsCreateTeamWebhook, RequestCreateTeamWebhook requestData)
+		public Task<ResponseGeneric<ResponseWebhook, ResponseError>> CreateTeamWebhookAsync(ParamsCreateWebhook paramsCreateTeamWebhook, RequestCreateWebhook requestData)
 		{
 			requestData.ValidateData();
 

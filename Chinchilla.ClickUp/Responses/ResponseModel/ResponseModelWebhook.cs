@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 
 namespace Chinchilla.ClickUp.Responses.Model
 {
@@ -31,7 +32,7 @@ namespace Chinchilla.ClickUp.Responses.Model
 		public int? TaskId { get; set; }
 
 		[JsonProperty("list_id")]
-		public int? ListId { get; set; }
+		public long? ListId { get; set; }
 
 		[JsonProperty("folder_id")]
 		public int? FolderId { get; set; }

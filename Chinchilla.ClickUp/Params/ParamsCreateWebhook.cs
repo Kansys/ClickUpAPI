@@ -8,7 +8,7 @@ namespace Chinchilla.ClickUp.Params
 	/// <summary>
 	/// The param object of create team space request
 	/// </summary>
-	public class ParamsCreateTeamWebhook
+	public class ParamsCreateWebhook
 	{
 		#region Attributes
 
@@ -28,7 +28,7 @@ namespace Chinchilla.ClickUp.Params
 		/// The constructor of ParamsCreateTeamWebhook
 		/// </summary>
 		/// <param name="teamId"></param>
-		public ParamsCreateTeamWebhook(string teamId)
+		public ParamsCreateWebhook(string teamId)
 		{
 			TeamId = teamId;
 		}
@@ -45,7 +45,7 @@ namespace Chinchilla.ClickUp.Params
 		{
 			if (string.IsNullOrEmpty(TeamId))
 			{
-				throw new ArgumentNullException("TeamId");
+				throw new ArgumentNullException(nameof(TeamId));
 			}
 		}
 
