@@ -133,6 +133,12 @@ namespace Chinchilla.ClickUp.Responses.Model
         public ResponseModelFolder Project { get; set; }
 
         /// <summary>
+        /// Model Folder with information of the project where task it's assigned
+        /// </summary>
+        [JsonProperty("folder")]
+        public ResponseModelFolder Folder { get; set; }
+
+        /// <summary>
         /// Model Space with information of the space where task it's assigned
         /// </summary>
         [JsonProperty("space")]
