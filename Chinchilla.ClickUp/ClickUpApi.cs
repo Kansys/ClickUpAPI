@@ -353,7 +353,7 @@ namespace Chinchilla.ClickUp
 			request.AddHeader("authorization", AccessToken);
 
 			// execute the request
-			ResponseGeneric<ResponseModelTask, ResponseError> result = RestSharperHelper.ExecuteRequest<ResponseModelTask, ResponseError>(client, request);
+			var result = RestSharperHelper.ExecuteRequest<ResponseModelTask, ResponseError>(client, request);
 			return result;
 		}
 
@@ -838,7 +838,10 @@ namespace Chinchilla.ClickUp
 		public Task<ResponseGeneric<ResponseModelTask, ResponseError>> GetTaskByIdAsync(ParamsGetTaskById paramsGetTaskById)
 		{
 			var client = GetRestClient();
-			var request = new RestRequest($"task/{paramsGetTaskById.TaskId}");
+            var resource = string.IsNullOrEmpty(paramsGetTaskById.CustomTaskId) ?
+                $"task/{paramsGetTaskById.TaskId}" :
+                $"task/{paramsGetTaskById.CustomTaskId}/?custom_task_ids=true&team_id={paramsGetTaskById.TeamId}";
+            var request = new RestRequest(resource);
 			request.AddHeader("authorization", AccessToken);
 
 			// execute the request
