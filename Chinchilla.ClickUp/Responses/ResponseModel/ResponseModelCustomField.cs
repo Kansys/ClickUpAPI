@@ -30,5 +30,7 @@ namespace Chinchilla.ClickUp.Responses.Model
 
         [JsonProperty("required")]
         public bool Required { get; set; }
+
+        public override string ToString() => $"{FieldType}: {FieldName} = {Value}";
     }
 }

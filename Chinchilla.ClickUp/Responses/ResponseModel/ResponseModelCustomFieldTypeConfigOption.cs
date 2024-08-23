@@ -27,6 +27,8 @@ namespace Chinchilla.ClickUp.Responses.Model
 
         [JsonProperty("workspace_id")]
         public string WorkspaceId { get; set; }
+
+        public override string ToString() => $"{OrderIndex}: {Name}";
     }
 }
 

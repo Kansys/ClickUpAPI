@@ -10,13 +10,19 @@ namespace Chinchilla.ClickUp.Responses.Model
     /// Model object of Task information response
     /// </summary>
     public class ResponseModelTask
-        : Helpers.IResponse
+        : IResponse
     {
         /// <summary>
-        /// Id of the Task
+        /// ID of the Task
         /// </summary>
         [JsonProperty("id")]
         public string Id { get; set; }
+
+        /// <summary>
+        /// Custom ID of the Task
+        /// </summary>
+        [JsonProperty("custom_id")]
+        public string CustomId { get; set; }
 
         /// <summary>
         /// Name of the task
@@ -155,6 +161,11 @@ namespace Chinchilla.ClickUp.Responses.Model
         /// </summary>
         [JsonProperty("custom_fields")]
         public ResponseModelCustomField[] CustomFields { get; set; }
+
+        public override string ToString()
+        {
+            return $"{Id} ({CustomId}): {Name}";
+        }
     }
 
 }
