@@ -37,6 +37,12 @@ namespace Chinchilla.ClickUp.Responses.Model
         public string TextContent { get; set; }
 
         /// <summary>
+        /// Description of the task
+        /// </summary>
+        [JsonProperty("description")]
+        public string Description { get; set; }
+
+        /// <summary>
         /// Status of the task
         /// </summary>
         [JsonProperty("status")]
@@ -68,6 +74,13 @@ namespace Chinchilla.ClickUp.Responses.Model
         [JsonProperty("date_closed")]
         [JsonConverter(typeof(JsonConverterDateTimeMilliseconds))]
         public DateTime? DateClosed { get; set; }
+
+        /// <summary>
+        /// Date when task done
+        /// </summary>
+        [JsonProperty("date_done")]
+        [JsonConverter(typeof(JsonConverterDateTimeMilliseconds))]
+        public DateTime? DateDone { get; set; }
 
         /// <summary>
         /// Model user with the information of the creator
