@@ -26,10 +26,10 @@ namespace Chinchilla.ClickUp
 		/// </summary>
 		private static readonly Uri BaseAddress = new("https://api.clickup.com/api/v2/");
 
-        private static readonly JsonSerializerSettings JsonSerializerSettings = new()
+        public static readonly JsonSerializerSettings JsonSerializerSettings = new()
         {
             DateParseHandling = DateParseHandling.None,
-            NullValueHandling = NullValueHandling.Ignore,
+            //NullValueHandling = NullValueHandling.Ignore,
             //DefaultValueHandling = DefaultValueHandling.Ignore
         };
 
@@ -875,14 +875,13 @@ namespace Chinchilla.ClickUp
 		/// <returns>ResponseGeneric with ResponseSuccess object expected</returns>
 		public Task<ResponseGeneric<ResponseModelTask, ResponseError>> EditTaskAsync(ParamsEditTask paramsEditTask, RequestEditTask requestData)
 		{
-            throw new ApplicationException("This method damages the task. Do not use it without refactoring.");
-			//var client = GetRestClient();
-			//var request = new RestRequest($"task/{paramsEditTask.TaskId}", Method.Put);
-			//request.AddHeader("authorization", AccessToken);
-			//request.AddJsonBody(requestData);
+			var client = GetRestClient();
+			var request = new RestRequest($"task/{paramsEditTask.TaskId}", Method.Put);
+			request.AddHeader("authorization", AccessToken);
+			request.AddJsonBody(requestData);
 
-			//// execute the request
-			//return RestSharperHelper.ExecuteRequestAsync<ResponseModelTask, ResponseError>(client, request);
+			// execute the request
+			return RestSharperHelper.ExecuteRequestAsync<ResponseModelTask, ResponseError>(client, request);
 		}
 		
         #endregion

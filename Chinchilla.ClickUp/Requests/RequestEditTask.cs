@@ -7,10 +7,58 @@ using Chinchilla.ClickUp.Helpers;
 namespace Chinchilla.ClickUp.Requests
 {
 	/// <summary>
-	/// Request object for method EditTask()
+	/// Base request object for method EditTask()
 	/// </summary>
-	public class RequestEditTask
-	{
+	public abstract class RequestEditTask
+    {}
+
+    /// <summary>
+    /// Set Due Date task value
+    /// </summary>
+	public class SetTaskDueDate : RequestEditTask
+    {
+        public SetTaskDueDate(DateTime dueDate) => DueDate = dueDate;
+
+        #region Attributes
+
+        /// <summary>
+        /// Due Date of the task
+        /// </summary>
+        [JsonProperty("due_date")]
+        [JsonConverter(typeof(JsonConverterDateTimeMilliseconds))]
+        public DateTime DueDate { get; }
+
+        /// <summary>
+        /// Is there time in the DueDate value
+        /// </summary>
+        [JsonProperty("due_date_time")]
+        public bool? HasTimeInDueDate => DueDate.TimeOfDay.TotalSeconds > 0;
+
+        #endregion
+    }
+
+    /// <summary>
+    /// Erase Due Date task value
+    /// </summary>
+	public class EraseTaskDueDate : RequestEditTask
+    {
+        #region Attributes
+
+        /// <summary>
+        /// Due Date of the task
+        /// </summary>
+        [JsonProperty("due_date")]
+        public DateTime? DueDate => null;
+
+        #endregion
+    }
+
+
+    /// <summary>
+    /// Edit all fields. TODO: need to be refactored, otherwise it erases all fields
+    /// </summary>
+	internal class RequestEditTaskFull : RequestEditTask
+    {
 		#region Attributes
 
 		/// <summary>
