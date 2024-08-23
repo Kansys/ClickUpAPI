@@ -34,8 +34,7 @@ namespace Chinchilla.ClickUp.Helpers
             var milliseconds = value is string s
                 ? long.Parse(s)
                 : (long)value;
-            return DateTimeOffset.FromUnixTimeMilliseconds(milliseconds).DateTime;
-
+            return DateTimeOffset.FromUnixTimeMilliseconds(milliseconds).UtcDateTime;
         }
 
 		/// <summary>

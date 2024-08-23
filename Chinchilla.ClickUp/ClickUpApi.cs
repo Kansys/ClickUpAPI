@@ -26,7 +26,12 @@ namespace Chinchilla.ClickUp
 		/// </summary>
 		private static readonly Uri BaseAddress = new("https://api.clickup.com/api/v2/");
 
-        private static readonly JsonSerializerSettings JsonSerializerSettings = new() { DateParseHandling = DateParseHandling.None };
+        private static readonly JsonSerializerSettings JsonSerializerSettings = new()
+        {
+            DateParseHandling = DateParseHandling.None,
+            NullValueHandling = NullValueHandling.Ignore,
+            //DefaultValueHandling = DefaultValueHandling.Ignore
+        };
 
         /// <summary>
 		/// The Access Token to add during the request
@@ -449,35 +454,15 @@ namespace Chinchilla.ClickUp
 		/// <returns>ResponseGeneric with ResponseSuccess response object</returns>
 		public ResponseGeneric<ResponseModelTask, ResponseError> EditTask(ParamsEditTask paramsEditTask, RequestEditTask requestData)
         {
-            throw new ApplicationException("This method damages the task. Do not use it without refactoring.");
-            //var client = GetRestClient();
-            //var request = new RestRequest($"task/{paramsEditTask.TaskId}", Method.Put);
-            //request.AddHeader("authorization", AccessToken);
-            //request.AddJsonBody(requestData);
+			var client = GetRestClient();
+			var request = new RestRequest($"task/{paramsEditTask.TaskId}", Method.Put);
+			request.AddHeader("authorization", AccessToken);
+			request.AddJsonBody(requestData);
 
-            //// execute the request
-            //ResponseGeneric<ResponseModelTask, ResponseError> result = RestSharperHelper.ExecuteRequest<ResponseModelTask, ResponseError>(client, request);
-            //return result;
-        }
-
-        /// <summary>
-        /// Edit Task information.
-        /// </summary>
-        /// <param name="paramsEditTask">param object of Edit Task request</param>
-        /// <param name="requestData">RequestEditTask object. Should contain only fields which need to be modified.</param>
-        /// <returns>ResponseGeneric with ResponseSuccess response object</returns>
-        public ResponseGeneric<ResponseModelTask, ResponseError> EditTask(ParamsEditTask paramsEditTask, object requestData)
-        {
-            var client = GetRestClient();
-            var request = new RestRequest($"task/{paramsEditTask.TaskId}", Method.Put);
-            request.AddHeader("authorization", AccessToken);
-            request.AddJsonBody(requestData);
-
-            // execute the request
-            var result = RestSharperHelper.ExecuteRequest<ResponseModelTask, ResponseError>(client, request);
-            return result;
-        }
-
+			// execute the request
+			var result = RestSharperHelper.ExecuteRequest<ResponseModelTask, ResponseError>(client, request);
+			return result;
+		}
 
 		/// <summary>
 		/// Edit Task custom field.
