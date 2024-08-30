@@ -602,6 +602,17 @@ namespace Chinchilla.ClickUp
             return result;
         }
 
+        public ResponseGeneric<ResponseSuccess, ResponseError> DeleteWebhook(ParamsDeleteWebhook paramDeleteWebhook)
+        {
+            var client = GetRestClient();
+            var request = new RestRequest($"webhook/{paramDeleteWebhook.WebhookId}", Method.Delete);
+            request.AddHeader("authorization", AccessToken);
+
+            // execute the request
+            var result = RestSharperHelper.ExecuteRequest<ResponseSuccess, ResponseError>(client, request);
+            return result;
+        }
+
         #endregion
 
         #endregion
