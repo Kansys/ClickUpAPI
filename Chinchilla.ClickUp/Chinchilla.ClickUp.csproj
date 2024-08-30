@@ -80,8 +80,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-		<PackageReference Include="RestSharp" version="111.4.1" />
-		<PackageReference Include="RestSharp.Serializers.NewtonsoftJson" Version="111.4.1" />
+		<PackageReference Include="RestSharp" version="112.0.0" />
+		<PackageReference Include="RestSharp.Serializers.NewtonsoftJson" Version="112.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
