@@ -76,7 +76,7 @@ namespace Chinchilla.ClickUp.Requests
         /// ID of the Space
         /// </summary>
         [JsonProperty("space_id")]
-        public string SpaceId { get; set; }
+        public long SpaceId { get; set; }
 
         /// <summary>
         /// Subscribe to events for the List
@@ -84,7 +84,7 @@ namespace Chinchilla.ClickUp.Requests
         /// <param name="endpoint"></param>
         /// <param name="events"></param>
         /// <param name="spaceId"></param>
-        public RequestCreateWebhookForSpace(string endpoint, string[] events, string spaceId) : base(
+        public RequestCreateWebhookForSpace(string endpoint, string[] events, long spaceId) : base(
             endpoint, events)
         {
             SpaceId = spaceId;

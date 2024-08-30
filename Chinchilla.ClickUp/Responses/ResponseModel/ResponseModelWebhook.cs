@@ -38,7 +38,7 @@ namespace Chinchilla.ClickUp.Responses.Model
 		public int? FolderId { get; set; }
 
 		[JsonProperty("space_id")]
-		public int? SpaceId { get; set; }
+		public long? SpaceId { get; set; }
 
 		[JsonProperty("health")]
 		public ResponseModelWebhookHealth Health { get; set; }
