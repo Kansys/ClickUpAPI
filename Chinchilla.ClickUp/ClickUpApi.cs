@@ -46,9 +46,9 @@ namespace Chinchilla.ClickUp
 		/// Create object with Personal Access Token
 		/// </summary>
 		/// <param name="accessToken">Personal Access Token</param>
-		public ClickUpApi(string accessToken)
-		{
-			AccessToken = accessToken;
+        public ClickUpApi(string accessToken)
+        {
+            AccessToken = accessToken;
 		}
 
 		/// <summary>
@@ -379,7 +379,7 @@ namespace Chinchilla.ClickUp
                 additionalParams.Add($"include_closed={paramsGetTasks.IncludeClosed.Value}");
             if (paramsGetTasks.Subtasks is not null)
                 additionalParams.Add($"subtasks={paramsGetTasks.Subtasks.Value}");
-			if (paramsGetTasks.CustomFieldFilters.Any())
+			if (paramsGetTasks.CustomFieldFilters.Length > 0)
 				additionalParams.Add($"custom_fields=[{string.Join(',', paramsGetTasks.CustomFieldFilters.Select(f => f.Expression))}]");
 
             // parameter below causes an error: {"err":"Internal server error","ECODE":"ITEMV2_003"}
