@@ -29,7 +29,7 @@ namespace Chinchilla.ClickUp.Responses.Model
 		public string[] Events { get; set; }
 
 		[JsonProperty("task_id")]
-		public int? TaskId { get; set; }
+		public string TaskId { get; set; }
 
 		[JsonProperty("list_id")]
 		public long? ListId { get; set; }

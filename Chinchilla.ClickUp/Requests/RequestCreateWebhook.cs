@@ -117,7 +117,7 @@ namespace Chinchilla.ClickUp.Requests
         /// <param name="endpoint"></param>
         /// <param name="events"></param>
         /// <param name="folderId"></param>
-        private RequestCreateWebhookForFolder(string endpoint, string[] events, string folderId) : base(endpoint, events)
+        public RequestCreateWebhookForFolder(string endpoint, string[] events, string folderId) : base(endpoint, events)
         {
             FolderId = folderId;
         }
@@ -150,7 +150,7 @@ namespace Chinchilla.ClickUp.Requests
         /// <param name="endpoint"></param>
         /// <param name="events"></param>
         /// <param name="listId"></param>
-        private RequestCreateWebhookForList(string endpoint, string[] events, string listId) : base(endpoint, events)
+        public RequestCreateWebhookForList(string endpoint, string[] events, string listId) : base(endpoint, events)
         {
             ListId = listId;
         }
@@ -182,7 +182,7 @@ namespace Chinchilla.ClickUp.Requests
         /// <param name="endpoint"></param>
         /// <param name="events"></param>
         /// <param name="taskId"></param>
-        private RequestCreateWebhookForTask(string endpoint, string[] events, string taskId) : base(endpoint, events)
+        public RequestCreateWebhookForTask(string endpoint, string[] events, string taskId) : base(endpoint, events)
         {
             TaskId = taskId;
         }
